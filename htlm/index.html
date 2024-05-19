@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Calculator</title>
+</head>
+<body>
+    <h1>Interest Calculation Result</h1>
+    <input id="p" placeholder="principal"><br><br>
+    <input id="r" placeholder="rate"><br><br>
+    <input id="t" placeholder="time"><br><br>
+    <button onclick="pop()" id="calc">Calculate</button>
+    <div id="final"></div>
+
+    <script>
+        async function pop() {
+            const a = document.getElementById("p").value;
+            const b = document.getElementById("r").value;
+            const c = document.getElementById("t").value;
+            const element = document.getElementById("final");
+
+            try {
+                const res = await fetch(`http://localhost:3000/interest?principal=${a}&rate=${b}&time=${c}`);
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                const ans = await res.json();
+                const i = ans.Interest;
+                element.innerHTML = i;
+            } catch (error) {
+                console.error('Error fetching interest data:', error);
+                element.innerHTML = 'Error fetching interest data. Please check the console for details.';
+            }
+        }
+    </script>
+</body>
+</html>
