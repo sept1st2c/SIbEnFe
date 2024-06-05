@@ -1,2 +1,2 @@
 # SIbEnFe
-simple stuffs
+simple js stuffs im learning
