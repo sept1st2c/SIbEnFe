@@ -4,31 +4,49 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [ID, setID] = useState(5);
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          setID(1);
+        }}
+      >
+        1
+      </button>
+      <button
+        onClick={() => {
+          setID(2);
+        }}
+      >
+        2
+      </button>
+      <button>3</button>
+      <button>4</button>
+      <Todo id={ID} />
+    </div>
+  );
+}
+
+function Todo({ id }) {
+  const [todo, setTodo] = useState({});
 
   useEffect(() => {
-    fetch("https://sum-server.100xdevs.com/todos").then(async function (res) {
+    fetch("https://sum-server.100xdevs.com/todo?id=" + id).then(async function (
+      res
+    ) {
       const json = await res.json();
-      setTodos(json.todos);
+      setTodo(json.todo);
+      console.log(id);
     });
-  }, []);
+  }, [id]);
 
   return (
     <div>
-      {todos.map((todo) => (
-        <Todo key={todo.id} title={todo.title} description={todo.description} />
-      ))}
+      <h1>{todo.title}</h1>
+      <h4>{todo.description}</h4>
     </div>
   );
 }
-
-function Todo({ title, description }) {
-  return (
-    <div>
-      <h1>{title}</h1>
-      <h4>{description}</h4>
-    </div>
-  );
-}
-
 export default App;
