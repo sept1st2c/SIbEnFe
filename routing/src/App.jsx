@@ -1,43 +1,50 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-
-import "./App.css";
-import { Dashboard } from "./pages/Dashboard";
-import { Landing } from "./pages/Landing";
+import { CountContext } from "./context";
+import { useContext } from "react";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <div>
-      <BrowserRouter>
-        <AppBar />
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
-          <Route path="/" element={<Landing />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <CountContext.Provider value={count}>
+        <Count count={count} setCount={setCount} />
+      </CountContext.Provider>
     </div>
   );
 }
 
-function AppBar() {
-  const navigate = useNavigate();
+function Count({ count, setCount }) {
+  return (
+    <div>
+      <CountRenderer count={count} />
+      <Buttons count={count} setCount={setCount} />
+    </div>
+  );
+}
+
+function CountRenderer() {
+  const count = useContext(CountContext);
+  return <div>{count}</div>;
+}
+
+function Buttons({ count, setCount }) {
   return (
     <div>
       <button
         onClick={() => {
-          navigate("/dashboard");
+          setCount(count + 1);
         }}
       >
-        Dashborad
+        Increase
       </button>
+
       <button
         onClick={() => {
-          navigate("/");
+          setCount(count - 1);
         }}
       >
-        Landing
+        Decrease
       </button>
     </div>
   );
