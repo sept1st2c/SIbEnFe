@@ -1,29 +1,40 @@
 import { useEffect, useState } from "react";
 
-const useMousePointer = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e) => {
-    setPosition({ x: e.clientX, y: e.clientY });
-  };
+const useDebounce = (value, delay) => {
+  // State to store the debounced value
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
+    // Set up a timer to update the debounced value after the specified delay
+    const timerId = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Clean up the timer if the value changes before the delay has passed
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      console.log("hi");
+      console.log("okoko");
+      clearTimeout(timerId);
     };
-  }, []);
-  console.log("hiii");
-  return position;
+  }, [value, delay]);
+  console.log("yeyeye");
+  return debouncedValue;
 };
 
 function App() {
-  const mousePointer = useMousePointer();
+  const [inputValue, setInputValue] = useState("");
+  const debouncedValue = useDebounce(inputValue, 500); // 500 milliseconds debounce delay
+
+  // Use the debouncedValue in your component logic, e.g., trigger a search API call via a useEffect
 
   return (
     <>
-      Your mouse position is {mousePointer.x} {mousePointer.y}
+      Debounced Value is {debouncedValue} <br />
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Search..."
+      />
     </>
   );
 }
