@@ -1,19 +1,20 @@
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 
-// const fetcher = (url) => fetch(url).then((res) => res.json());
-const fetcher = async function (url) {
-  const data = await fetch(url);
-  const json = await data.json();
-  return json;
-};
+function useIsOnline() {
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
-export function App() {
-  const { data, error, isLoading } = useSWR(
-    "https://sum-server.100xdevs.com/todos",
-    fetcher
-  );
+  useEffect(() => {
+    window.addEventListener("online", () => setIsOnline(true));
+    window.addEventListener("offline", () => setIsOnline(false));
+  }, []);
 
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
-  return <div>hello, you have {data.todos.length} todos!</div>;
+  return isOnline;
 }
+
+function App() {
+  const isOnline = useIsOnline(5);
+
+  return <>{isOnline ? "You are online yay!" : "You are not online"}</>;
+}
+
+export default App;
